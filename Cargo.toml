@@ -1,0 +1,4 @@
+[package]
+name = "prng_well1024a"
+version = "0.1.0"
+authors = ["Helge Skogly Holm <helge.holm@gmail.com>"]
