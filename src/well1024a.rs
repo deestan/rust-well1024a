@@ -26,7 +26,7 @@ impl Well1024aRng {
         }
 
         fn mat0neg(t: i32, v: u32) -> u32 {
-            v ^ (v << (-t))
+            v ^ (v << -t)
         }
 
         let m1 = 3;
