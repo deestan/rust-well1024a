@@ -60,6 +60,12 @@ impl Well1024aRng {
         let b = self.next_u32() as u64;
         (a << 32) + b
     }
+
+    pub fn next_f32(&mut self) -> f32 {
+        let n = self.next_u32() as f32;
+        let min_slice : f32 = 0.00000000023283063;
+        n * min_slice
+    }
 }
 
 #[test]
