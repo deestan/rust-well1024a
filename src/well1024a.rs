@@ -1,3 +1,7 @@
+extern crate rand;
+
+use self::rand::Rng;
+
 pub struct Well1024aRng {
     state: State,
 }
@@ -19,8 +23,10 @@ impl Well1024aRng {
             },
         }
     }
+}
 
-    pub fn next_u32(&mut self) -> u32 {
+impl Rng for Well1024aRng {
+    fn next_u32(&mut self) -> u32 {
         fn mat0pos(t: i32, v: u32) -> u32 {
             v ^ (v >> t)
         }
@@ -53,24 +59,6 @@ impl Well1024aRng {
         *i = (*i + 31) & 31;
         
         state[*i]
-    }
-
-    pub fn next_u64(&mut self) -> u64 {
-        let a = self.next_u32() as u64;
-        let b = self.next_u32() as u64;
-        (a << 32) + b
-    }
-
-    pub fn next_f32(&mut self) -> f32 {
-        let n = self.next_u32() as f32;
-        let min_slice : f32 = 0.00000000023283063;
-        n * min_slice
-    }
-
-    pub fn next_f64(&mut self) -> f64 {
-        let n = (self.next_u64() & 0x001fffffffffffff) as f64;
-        let min_slice : f64 = 0.00000000000000011102230246251566;
-        n * min_slice
     }
 }
 
