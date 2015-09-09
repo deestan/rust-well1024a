@@ -138,26 +138,26 @@ impl Rng for Well1024aRng {
         let m2 = 24;
         let m3 = 10;
         let state = &mut self.state.data;
-        let i = &mut self.state.i;
+        let i = self.state.i;
 
-        let z0 = state[(*i + 31) & 31];
+        let z0 = state[(i + 31) & 31];
         let z1 =
-            state[*i] ^
-            mat0pos(8, state[(*i + m1) & 31]);
+            state[i] ^
+            mat0pos(8, state[(i + m1) & 31]);
         let z2 =
-            mat0neg(-19, state[(*i + m2) & 31]) ^
-            mat0neg(-14, state[(*i + m3) & 31]);
+            mat0neg(-19, state[(i + m2) & 31]) ^
+            mat0neg(-14, state[(i + m3) & 31]);
 
-        state[*i] = z1 ^ z2;
+        state[i] = z1 ^ z2;
 
-        state[(*i + 31) & 31] =
+        state[(i + 31) & 31] =
             mat0neg(-11, z0) ^
             mat0neg(-7, z1) ^
             mat0neg(-13, z2);
 
-        *i = (*i + 31) & 31;
+        self.state.i = (i + 31) & 31;
         
-        state[*i]
+        state[self.state.i]
     }
 }
 
