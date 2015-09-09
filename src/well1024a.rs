@@ -54,6 +54,12 @@ impl Well1024aRng {
         
         state[*i]
     }
+
+    pub fn next_u64(&mut self) -> u64 {
+        let a = self.next_u32() as u64;
+        let b = self.next_u32() as u64;
+        (a << 32) + b
+    }
 }
 
 #[test]
