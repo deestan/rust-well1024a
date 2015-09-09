@@ -66,6 +66,12 @@ impl Well1024aRng {
         let min_slice : f32 = 0.00000000023283063;
         n * min_slice
     }
+
+    pub fn next_f64(&mut self) -> f64 {
+        let n = (self.next_u64() & 0x001fffffffffffff) as f64;
+        let min_slice : f64 = 0.00000000000000011102230246251566;
+        n * min_slice
+    }
 }
 
 #[test]
