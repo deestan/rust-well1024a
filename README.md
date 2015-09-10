@@ -29,6 +29,8 @@ From the abstract:
 extern crate prng_well1024a;
 extern crate rand;
 
+use rand::Rng;
+
 fn roll<T: Rng>(rng: &mut T) -> String {
     let options = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
     let result = rng.choose(&options).expect("die fell on floor");
