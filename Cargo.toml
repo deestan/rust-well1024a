@@ -10,3 +10,7 @@ rand = "0.3.0"
 name = "test"
 path = "src/main.rs"
 doc = false
+
+[lib]
+name = "prng_well1024a"
+path = "src/lib.rs"
