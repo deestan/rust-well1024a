@@ -3,7 +3,7 @@
 Implementation of the [WELL-1024a](http://www.iro.umontreal.ca/~panneton/WELLRNG.html) pseudorandom number generation algorithm.
 
 In haphazard testing, this generator has proven to be very fast
-and provide good random numbers..
+and provide good random numbers.
 
 From the abstract:
 
@@ -35,7 +35,6 @@ fn roll<T: Rng>(rng: &mut T) -> String {
     String::from(*result)
 }
 
-#[allow(dead_code)]
 fn main() {
     let mut rng = prng_well1024a::Well1024aRng::new();
     println!("{}, {}, {}, {}, {}",
