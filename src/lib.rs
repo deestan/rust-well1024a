@@ -26,7 +26,7 @@
 
 extern crate rand;
 
-use self::rand::Rng;
+use rand::Rng;
 
 pub struct Well1024aRng {
     state: State,
