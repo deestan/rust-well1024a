@@ -11,7 +11,8 @@ fn roll<T: Rng>(rng: &mut T) -> String {
 
 #[allow(dead_code)]
 fn main() {
-    let mut rng = prng_well1024a::Well1024aRng::new();
+    let seed = rand::thread_rng().next_u32();
+    let mut rng = prng_well1024a::Well1024aRng::new(seed);
     println!("{}, {}, {}, {}, {}",
              roll(&mut rng),
              roll(&mut rng),

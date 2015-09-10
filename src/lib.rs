@@ -38,23 +38,6 @@ struct State {
 }
 
 impl Well1024aRng {
-    /// Constructs a new `Well1024aRng`, with a default static seed.
-    ///
-    /// # Examples
-    /// 
-    /// ```
-    /// use prng_well1024a::Well1024aRng;
-    ///
-    /// let mut rng = Well1024aRng::new();
-    /// ```
-    pub fn new() -> Well1024aRng {
-        Well1024aRng::load(
-            [ 1, 1, 1, 1, 1, 1, 1, 1,
-              1, 1, 1, 1, 1, 1, 1, 1,
-              1, 1, 1, 1, 1, 1, 1, 1,
-              1, 1, 1, 1, 1, 1, 1, 1 ])
-    }
-
     /// Constructs a new `Well1024aRng`, seeded from a number.
     ///
     /// # Examples
@@ -64,7 +47,7 @@ impl Well1024aRng {
     ///
     /// let mut rng = Well1024aRng::seed(49152);
     /// ```
-    pub fn seed(seed: u32) -> Well1024aRng {
+    pub fn new(seed: u32) -> Well1024aRng {
         Well1024aRng::load(
             [ seed +  0, seed +  1, seed +  2, seed +  3,
               seed +  4, seed +  5, seed +  6, seed +  7,
