@@ -100,8 +100,7 @@ impl Well1024aRng {
     pub fn state(&self) -> Vec<u32> {
         let mut out = vec![0u32; 32];
         for i in 0..32 {
-            let val = self.state[(i + self.i) & 0x1f];
-            out.push(val);
+            out[i] = self.state[(i + self.i) & 0x1f];
         }
         out
     }
