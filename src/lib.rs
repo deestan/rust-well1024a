@@ -46,7 +46,7 @@ impl Well1024aRng {
     pub fn new() -> Well1024aRng {
         let mut rng = rand::thread_rng();
         let state = (0..32).map(|_| { rng.next_u32() }).collect();
-        Well1024aRng::load(state)
+        Well1024aRng::load(state).unwrap()
     }
     /// Constructs a new `Well1024aRng`, seeded from a number.
     ///
@@ -59,7 +59,7 @@ impl Well1024aRng {
     /// ```
     pub fn seed(seed: u32) -> Well1024aRng {
         let state = (0..32).map(|i| { i + seed }).collect();
-        Well1024aRng::load(state)
+        Well1024aRng::load(state).unwrap()
     }
 
     /// Constructs a new `Well1024aRng`, from a full 1024-bit state.
@@ -73,12 +73,16 @@ impl Well1024aRng {
     ///
     /// let mut rng = Well1024aRng::load((0..32).collect());
     /// ```
-    pub fn load(state: Vec<u32>) -> Well1024aRng {
-        let mut rng = Well1024aRng { i: 0, state: [0u32; 32] };
-        for i in (0..32) {
-            rng.state[i] = state[i];
+    pub fn load(state: Vec<u32>) -> Result<Well1024aRng, &'static str> {
+        if state.len() != 32 {
+            Err("Invalid state: len() != 32")
+        } else {
+            let mut rng = Well1024aRng { i: 0, state: [0u32; 32] };
+            for i in (0..32) {
+                rng.state[i] = state[i];
+            }
+            Ok(rng)
         }
-        rng
     }
 
     /// Returns the full 1024-bit state of a `Well1024aRng`.
