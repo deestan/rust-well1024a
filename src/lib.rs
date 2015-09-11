@@ -161,5 +161,6 @@ fn it_has_randomized_default_seed() {
 
 #[test]
 fn it_can_load_exported_state() {
-    Well1024aRng::load(Well1024aRng::seed(0).state()).unwrap();
+    let state = Well1024aRng::seed(0).state();
+    Well1024aRng::load(state).unwrap();
 }
