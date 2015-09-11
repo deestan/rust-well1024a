@@ -145,9 +145,21 @@ impl Rng for Well1024aRng {
 }
 
 #[test]
-fn it_works() {
-    let mut x = Well1024aRng::new();
+fn it_yields_different_numbers() {
+    let mut x = Well1024aRng::seed(0);
     let a = x.next_u32();
     let b = x.next_u32();
     assert!(a != b);
+}
+
+#[test]
+fn it_has_randomized_default_seed() {
+    let a = Well1024aRng::new().next_u32();
+    let b = Well1024aRng::new().next_u32();
+    assert!(a != b);
+}
+
+#[test]
+fn it_can_load_exported_state() {
+    Well1024aRng::load(Well1024aRng::seed(0).state()).unwrap();
 }
