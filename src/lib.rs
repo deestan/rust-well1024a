@@ -163,3 +163,13 @@ fn it_can_load_exported_state() {
     let state = Well1024aRng::seed(0).state();
     Well1024aRng::load(state).unwrap();
 }
+
+#[test]
+fn it_accurately_loads_exported_state() {
+    let mut rng1 = Well1024aRng::seed(0);
+    let _use_slightly = rng1.next_u32();
+    let mut rng2 = Well1024aRng::load(rng1.state()).unwrap();
+    for _ in (0..50) {
+        assert_eq!(rng1.next_u32(), rng2.next_u32());
+    }
+}
