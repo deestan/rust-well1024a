@@ -29,15 +29,25 @@ extern crate rand;
 use rand::Rng;
 
 pub struct Well1024aRng {
-    state: State,
-}
-
-struct State {
     i: usize,
-    data: [u32; 32],
+    state: [u32; 32],
 }
 
 impl Well1024aRng {
+    /// Constructs a new `Well1024aRng`, seeded from rand::thread_rng().
+    ///
+    /// # Examples
+    /// 
+    /// ```
+    /// use prng_well1024a::Well1024aRng;
+    ///
+    /// let mut rng = Well1024aRng::new();
+    /// ```
+    pub fn new() -> Well1024aRng {
+        let mut rng = rand::thread_rng();
+        let state = (0..32).map(|_| { rng.next_u32() }).collect();
+        Well1024aRng::load(state)
+    }
     /// Constructs a new `Well1024aRng`, seeded from a number.
     ///
     /// # Examples
@@ -47,16 +57,9 @@ impl Well1024aRng {
     ///
     /// let mut rng = Well1024aRng::seed(49152);
     /// ```
-    pub fn new(seed: u32) -> Well1024aRng {
-        Well1024aRng::load(
-            [ seed +  0, seed +  1, seed +  2, seed +  3,
-              seed +  4, seed +  5, seed +  6, seed +  7,
-              seed +  8, seed +  9, seed + 10, seed + 11,
-              seed + 12, seed + 13, seed + 14, seed + 15,
-              seed + 16, seed + 17, seed + 18, seed + 19,
-              seed + 20, seed + 21, seed + 22, seed + 23,
-              seed + 24, seed + 25, seed + 26, seed + 27,
-              seed + 28, seed + 29, seed + 30, seed + 31 ])
+    pub fn seed(seed: u32) -> Well1024aRng {
+        let state = (0..32).map(|i| { i + seed }).collect();
+        Well1024aRng::load(state)
     }
 
     /// Constructs a new `Well1024aRng`, from a full 1024-bit state.
@@ -68,20 +71,14 @@ impl Well1024aRng {
     /// ```
     /// use prng_well1024a::Well1024aRng;
     ///
-    /// let mut rng = Well1024aRng::load([
-    ///    1,  2,  3,  4,  5,  6,  7,  8,
-    ///    9, 10, 11, 12, 13, 14, 15, 16,
-    ///   17, 18, 19, 20, 21, 22, 23, 24,
-    ///   25, 26, 27, 28, 29, 30, 31, 32
-    /// ]);
+    /// let mut rng = Well1024aRng::load((0..32).collect());
     /// ```
-    pub fn load(state: [u32; 32]) -> Well1024aRng {
-        Well1024aRng {
-            state: State {
-                i: 0,
-                data: state
-            },
+    pub fn load(state: Vec<u32>) -> Well1024aRng {
+        let mut rng = Well1024aRng { i: 0, state: [0u32; 32] };
+        for i in (0..32) {
+            rng.state[i] = state[i];
         }
+        rng
     }
 
     /// Returns the full 1024-bit state of a `Well1024aRng`.
@@ -96,12 +93,11 @@ impl Well1024aRng {
     /// let mut rng = Well1024aRng::new();
     /// let state = rng.state();
     /// ```
-    pub fn state(&self) -> [u32; 32] {
-        let mut out = [0u32; 32];
-        let state = &self.state.data;
-        let state_i = self.state.i;
+    pub fn state(&self) -> Vec<u32> {
+        let mut out = vec![0u32; 32];
         for i in 0..32 {
-            out[i] = state[(i + state_i) & 0x1f];
+            let val = self.state[(i + self.i) & 0x1f];
+            out.push(val);
         }
         out
     }
@@ -120,8 +116,8 @@ impl Rng for Well1024aRng {
         let m1 = 3;
         let m2 = 24;
         let m3 = 10;
-        let state = &mut self.state.data;
-        let i = self.state.i;
+        let state = &mut self.state;
+        let i = self.i;
 
         let z0 = state[(i + 31) & 31];
         let z1 =
@@ -138,9 +134,9 @@ impl Rng for Well1024aRng {
             mat0neg(-7, z1) ^
             mat0neg(-13, z2);
 
-        self.state.i = (i + 31) & 31;
+        self.i = (i + 31) & 31;
         
-        state[self.state.i]
+        state[self.i]
     }
 }
 
