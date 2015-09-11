@@ -159,6 +159,11 @@ fn it_has_randomized_default_seed() {
 }
 
 #[test]
+fn it_can_export_state() {
+    let _state = Well1024aRng::seed(0).state();
+}
+
+#[test]
 fn it_can_load_exported_state() {
     let state = Well1024aRng::seed(0).state();
     Well1024aRng::load(state).unwrap();
@@ -172,4 +177,18 @@ fn it_accurately_loads_exported_state() {
     for _ in (0..50) {
         assert_eq!(rng1.next_u32(), rng2.next_u32());
     }
+}
+
+#[test]
+fn it_refuses_to_load_too_short_state() {
+    let mut state = Well1024aRng::seed(0).state();
+    state.pop().unwrap();
+    assert!(Well1024aRng::load(state).is_err());
+}
+
+#[test]
+fn it_refuses_to_load_too_long_state() {
+    let mut state = Well1024aRng::seed(0).state();
+    state.push(0);
+    assert!(Well1024aRng::load(state).is_err());
 }
